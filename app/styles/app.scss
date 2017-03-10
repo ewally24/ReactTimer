@@ -1,5 +1,4 @@
-$peach-color: #E2B1B1;
+@import "base/_variables";
+@import "components/_navigation";
 
-.page-title {
-	color: $peach-color;
-}
+
