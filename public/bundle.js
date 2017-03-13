@@ -104,17 +104,24 @@
 	    hashHistory = _require.hashHistory;
 
 	var Main = __webpack_require__(222);
+	var Timer = __webpack_require__(224);
+	var Countdown = __webpack_require__(225);
 
 	//load foundation
-	__webpack_require__(224);
+	__webpack_require__(226);
 
 	//load custom styles
-	__webpack_require__(228);
+	__webpack_require__(230);
 
 	reactDOM.render(React.createElement(
 		Router,
 		{ history: hashHistory },
-		React.createElement(Route, { path: '/', component: Main })
+		React.createElement(
+			Route,
+			{ path: '/', component: Main },
+			React.createElement(IndexRoute, { component: Timer }),
+			React.createElement(Route, { path: 'countdown', component: Countdown })
+		)
 	), document.getElementById('app'));
 
 /***/ },
@@ -24915,7 +24922,8 @@
 							'h1',
 							{ className: 'page-title' },
 							' Main Component '
-						)
+						),
+						this.props.children
 					)
 				)
 			);
@@ -24968,7 +24976,7 @@
 							null,
 							React.createElement(
 								Link,
-								{ to: '/', activeClassName: 'active' },
+								{ to: 'countdown', activeClassName: 'active-link' },
 								' Countdown '
 							)
 						)
@@ -24986,7 +24994,7 @@
 							' Created by ',
 							React.createElement(
 								'a',
-								{ targe: '_blank', href: 'http://errolwallace.com' },
+								{ target: '_blank', href: 'http://errolwallace.com' },
 								' Errol Wallace '
 							)
 						)
@@ -25002,13 +25010,57 @@
 /* 224 */
 /***/ function(module, exports, __webpack_require__) {
 
+	'use strict';
+
+	var React = __webpack_require__(7);
+
+	var Timer = React.createClass({
+		displayName: 'Timer',
+
+		render: function render() {
+			return React.createElement(
+				'h3',
+				null,
+				' Timer.jsx Component '
+			);
+		}
+	});
+
+	module.exports = Timer;
+
+/***/ },
+/* 225 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(7);
+
+	var Countdown = React.createClass({
+		displayName: 'Countdown',
+
+		render: function render() {
+			return React.createElement(
+				'h3',
+				null,
+				' Countdown.jsx component '
+			);
+		}
+	});
+
+	module.exports = Countdown;
+
+/***/ },
+/* 226 */
+/***/ function(module, exports, __webpack_require__) {
+
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(225);
+	var content = __webpack_require__(227);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(227)(content, {});
+	var update = __webpack_require__(229)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -25025,10 +25077,10 @@
 	}
 
 /***/ },
-/* 225 */
+/* 227 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(226)();
+	exports = module.exports = __webpack_require__(228)();
 	// imports
 
 
@@ -25039,7 +25091,7 @@
 
 
 /***/ },
-/* 226 */
+/* 228 */
 /***/ function(module, exports) {
 
 	/*
@@ -25095,7 +25147,7 @@
 
 
 /***/ },
-/* 227 */
+/* 229 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -25349,16 +25401,16 @@
 
 
 /***/ },
-/* 228 */
+/* 230 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(229);
+	var content = __webpack_require__(231);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(227)(content, {});
+	var update = __webpack_require__(229)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -25375,15 +25427,15 @@
 	}
 
 /***/ },
-/* 229 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(226)();
+	exports = module.exports = __webpack_require__(228)();
 	// imports
 
 
 	// module
-	exports.push([module.id, ".top-bar, .top-bar ul {\n  background-color: #333333; }\n\n.top-bar .menu-text {\n  color: #ffffff; }\n\n.top-bar .menu > .menu-text > a {\n  display: inline;\n  paddiing: 0px; }\n", ""]);
+	exports.push([module.id, ".top-bar, .top-bar ul {\n  background-color: #333333; }\n\n.top-bar .menu-text {\n  color: #ffffff; }\n\n.top-bar .menu > .menu-text > a {\n  display: inline;\n  padding: 0px; }\n\n.top-bar .menu > li > .active-link {\n  font-weight: bold; }\n", ""]);
 
 	// exports
 

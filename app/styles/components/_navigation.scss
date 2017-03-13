@@ -9,6 +9,10 @@
 
 	.menu > .menu-text > a {
 		display: inline;
-		paddiing: 0px;
+		padding: 0px;
+	}
+
+	.menu > li > .active-link {
+		font-weight: $nav-active-link;
 	}
 }
