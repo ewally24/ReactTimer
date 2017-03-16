@@ -9,7 +9,6 @@ var Main = React.createClass({
 				<Nav/>
 				<div className='row'>
 					<div className='medium-6 large-4 small-centered'>
-						<h1 className='page-title'> Main Component </h1>
 						{this.props.children}
 					</div>
 				</div>
