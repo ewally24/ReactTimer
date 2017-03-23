@@ -108,10 +108,10 @@
 	var Countdown = __webpack_require__(225);
 
 	//load foundation
-	__webpack_require__(227);
+	__webpack_require__(228);
 
 	//load custom styles
-	__webpack_require__(231);
+	__webpack_require__(232);
 
 	reactDOM.render(React.createElement(
 		Router,
@@ -24917,7 +24917,7 @@
 					{ className: 'row' },
 					React.createElement(
 						'div',
-						{ className: 'medium-6 large-4 small-centered' },
+						{ className: 'column medium-6 large-4 small-centered' },
 						this.props.children
 					)
 				)
@@ -25031,22 +25031,31 @@
 
 	var React = __webpack_require__(7);
 
-	var Clock = __webpack_require__(226);;
+	var Clock = __webpack_require__(226);
+	var CountdownForm = __webpack_require__(227);
 
 	var Countdown = React.createClass({
 		displayName: 'Countdown',
 
+		getInitialState: function getInitialState() {
+			return {
+				count: 0
+			};
+		},
+		handleCountdown: function handleCountdown(seconds) {
+			this.setState({
+				count: seconds
+			});
+		},
 		render: function render() {
+			var count = this.state.count;
+
+
 			return React.createElement(
 				'div',
 				null,
-				React.createElement(
-					'h3',
-					null,
-					' ',
-					React.createElement(Clock, { totalSeconds: 129 }),
-					' '
-				)
+				React.createElement(Clock, { totalSeconds: count }),
+				React.createElement(CountdownForm, { setCountdown: this.handleCountdown })
 			);
 		}
 	});
@@ -25108,13 +25117,53 @@
 /* 227 */
 /***/ function(module, exports, __webpack_require__) {
 
+	'use strict';
+
+	var React = __webpack_require__(7);
+
+	var CountdownForm = React.createClass({
+		displayName: 'CountdownForm',
+
+		onFormSubmit: function onFormSubmit(e) {
+			e.preventDefault();
+			var seconds = this.refs.seconds.value;
+
+			if (seconds.match(/^[0-9]*$/)) {
+				this.refs.seconds.value = '';
+				this.props.setCountdown(parseInt(seconds, 10));
+			}
+		},
+		render: function render() {
+			return React.createElement(
+				'div',
+				null,
+				React.createElement(
+					'form',
+					{ onSubmit: this.onFormSubmit, className: 'countdown-form', ref: 'form' },
+					React.createElement('input', { type: 'text', ref: 'seconds', placeholder: 'Enter Seconds' }),
+					React.createElement(
+						'button',
+						{ className: 'button expanded hollow' },
+						' Start Countdown '
+					)
+				)
+			);
+		}
+	});
+
+	module.exports = CountdownForm;
+
+/***/ },
+/* 228 */
+/***/ function(module, exports, __webpack_require__) {
+
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(228);
+	var content = __webpack_require__(229);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(230)(content, {});
+	var update = __webpack_require__(231)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -25131,10 +25180,10 @@
 	}
 
 /***/ },
-/* 228 */
+/* 229 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(229)();
+	exports = module.exports = __webpack_require__(230)();
 	// imports
 
 
@@ -25145,7 +25194,7 @@
 
 
 /***/ },
-/* 229 */
+/* 230 */
 /***/ function(module, exports) {
 
 	/*
@@ -25201,7 +25250,7 @@
 
 
 /***/ },
-/* 230 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -25455,16 +25504,16 @@
 
 
 /***/ },
-/* 231 */
+/* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(232);
+	var content = __webpack_require__(233);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(230)(content, {});
+	var update = __webpack_require__(231)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -25481,10 +25530,10 @@
 	}
 
 /***/ },
-/* 232 */
+/* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(229)();
+	exports = module.exports = __webpack_require__(230)();
 	// imports
 
 
