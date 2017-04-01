@@ -25086,6 +25086,11 @@
 			return React.createElement(
 				'div',
 				null,
+				React.createElement(
+					'h1',
+					{ className: 'page-title' },
+					' Timer App '
+				),
 				React.createElement(Clock, { totalSeconds: count }),
 				RenderControlArea()
 			);
