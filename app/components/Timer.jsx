@@ -57,6 +57,7 @@ var Timer = React.createClass({
 	render: function() {
 		var {count, countdownStatus} = this.state;
 
+		/*
 		var RenderControlArea = () => {
 			if(countdownStatus !== 'stopped') {
 				return <Controls countdownStatus={countdownStatus} onStatusChange={this.handleStatusChange}/>
@@ -64,12 +65,12 @@ var Timer = React.createClass({
 				return <CountdownForm setCountdown={this.handleCountdown}/>
 			}
 		}
-
+		*/
 		return (
 			<div>
 				<h1 className='page-title'> Timer App </h1>
 				<Clock totalSeconds={count}/>
-				{RenderControlArea()}
+				<Controls countdownStatus={countdownStatus} onStatusChange={this.handleStatusChange}/>
 			</div>
 		);
 	}

@@ -25068,20 +25068,19 @@
 			});
 		},
 		render: function render() {
-			var _this2 = this;
-
 			var _state = this.state,
 			    count = _state.count,
 			    countdownStatus = _state.countdownStatus;
 
-
-			var RenderControlArea = function RenderControlArea() {
-				if (countdownStatus !== 'stopped') {
-					return React.createElement(Controls, { countdownStatus: countdownStatus, onStatusChange: _this2.handleStatusChange });
-				} else {
-					return React.createElement(CountdownForm, { setCountdown: _this2.handleCountdown });
-				}
-			};
+			/*
+	  var RenderControlArea = () => {
+	  	if(countdownStatus !== 'stopped') {
+	  		return <Controls countdownStatus={countdownStatus} onStatusChange={this.handleStatusChange}/>
+	  	} else {
+	  		return <CountdownForm setCountdown={this.handleCountdown}/>
+	  	}
+	  }
+	  */
 
 			return React.createElement(
 				'div',
@@ -25092,7 +25091,7 @@
 					' Timer App '
 				),
 				React.createElement(Clock, { totalSeconds: count }),
-				RenderControlArea()
+				React.createElement(Controls, { countdownStatus: countdownStatus, onStatusChange: this.handleStatusChange })
 			);
 		}
 	});
@@ -25225,7 +25224,7 @@
 						{ onClick: _this2.onStatusChange('paused'), className: 'button primary' },
 						'Paused'
 					);
-				} else if (countdownStatus === 'paused') {
+				} else {
 					return React.createElement(
 						'button',
 						{ onClick: _this2.onStatusChange('started'), className: 'button secondary' },
