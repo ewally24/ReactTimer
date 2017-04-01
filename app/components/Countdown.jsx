@@ -20,11 +20,24 @@ var Countdown = React.createClass({
 				case 'stopped':
 				this.setState({count: 0})
 				case 'paused':
-				clearInterval(this.Timer);
-				this.Timer = undefined;
+				clearInterval(this.Timer)
+				this.Timer = undefined
 				break;
 			}
 		}
+	},
+	componentWillUpdate: function(nextProps, nextState) {
+
+	},
+	componentWillMount: function() {
+		console.log('componentWillMount');
+	},
+	componentDidMount: function() {
+		console.log('componentDidMount');
+	},
+	componentWillUnmount: function() {
+		clearInterval(this.Timer);
+		this.Timer = undefined;
 	},
 	startTimer: function() {
 		this.Timer = setInterval(() => {
@@ -32,7 +45,14 @@ var Countdown = React.createClass({
 			this.setState({
 				count : newCount >= 0 ? newCount : 0
 			})
+
+			if(newCount === 0) {
+				this.setState({
+					countdownStatus: 'stopped'
+				})
+			}
 		}, 1000)
+
 	},
 	handleCountdown: function(totalSeconds) {
 		this.setState({
