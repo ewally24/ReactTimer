@@ -105,7 +105,7 @@
 
 	var Main = __webpack_require__(222);
 	var Timer = __webpack_require__(224);
-	var Countdown = __webpack_require__(225);
+	var Countdown = __webpack_require__(228);
 
 	//load foundation
 	__webpack_require__(229);
@@ -25009,14 +25009,85 @@
 
 	var React = __webpack_require__(7);
 
+	var Clock = __webpack_require__(225);
+	var CountdownForm = __webpack_require__(226);
+	var Controls = __webpack_require__(227);
+
 	var Timer = React.createClass({
 		displayName: 'Timer',
 
+		getInitialState: function getInitialState() {
+			return {
+				count: 0,
+				countdownStatus: 'stopped'
+			};
+		},
+		propTypes: {
+			count: React.PropTypes.number
+		},
+		componentWillUnmount: function componentWillUnmount() {
+			clearInterval(this.Timer);
+			this.Timer = undefined;
+		},
+		componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
+			if (this.state.countdownStatus !== prevState.countdownStatus) {
+				switch (this.state.countdownStatus) {
+					case 'started':
+						this.startTimer();
+						break;
+					case 'stopped':
+						this.setState({
+							count: 0
+						});
+					case 'paused':
+						clearInterval(this.Timer);
+						this.Timer = undefined;
+						break;
+				}
+			}
+		},
+		startTimer: function startTimer() {
+			var _this = this;
+
+			this.Timer = setInterval(function () {
+				var newCount = _this.state.count + 1;
+				_this.setState({
+					count: newCount
+				});
+			}, 1000);
+		},
+		handleStatusChange: function handleStatusChange(newStatus) {
+			this.setState({
+				countdownStatus: newStatus
+			});
+		},
+		handleCountdown: function handleCountdown(totalSeconds) {
+			this.setState({
+				count: totalSeconds,
+				countdownStatus: 'started'
+			});
+		},
 		render: function render() {
+			var _this2 = this;
+
+			var _state = this.state,
+			    count = _state.count,
+			    countdownStatus = _state.countdownStatus;
+
+
+			var RenderControlArea = function RenderControlArea() {
+				if (countdownStatus !== 'stopped') {
+					return React.createElement(Controls, { countdownStatus: countdownStatus, onStatusChange: _this2.handleStatusChange });
+				} else {
+					return React.createElement(CountdownForm, { setCountdown: _this2.handleCountdown });
+				}
+			};
+
 			return React.createElement(
-				'h3',
+				'div',
 				null,
-				' Timer.jsx Component '
+				React.createElement(Clock, { totalSeconds: count }),
+				RenderControlArea()
 			);
 		}
 	});
@@ -25031,9 +25102,158 @@
 
 	var React = __webpack_require__(7);
 
-	var Clock = __webpack_require__(226);
-	var CountdownForm = __webpack_require__(227);
-	var Controls = __webpack_require__(228);
+	var Clock = React.createClass({
+		displayName: 'Clock',
+
+		getDefaultProps: function getDefaultProps() {
+			return {
+				totalSeconds: 0
+			};
+		},
+		propTypes: {
+			totalSeconds: React.PropTypes.number
+		},
+		formatSeconds: function formatSeconds(totalSeconds) {
+			var seconds = totalSeconds % 60;
+			var minutes = Math.floor(totalSeconds / 60);
+
+			if (seconds < 10) {
+				seconds = '0' + seconds;
+			}
+
+			if (minutes < 10) {
+				minutes = '0' + minutes;
+			}
+
+			return minutes + ':' + seconds;
+		},
+		render: function render() {
+			var totalSeconds = this.props.totalSeconds;
+
+
+			return React.createElement(
+				'div',
+				{ className: 'clock' },
+				React.createElement(
+					'span',
+					{ className: 'clock-text' },
+					this.formatSeconds(totalSeconds)
+				)
+			);
+		}
+	});
+
+	module.exports = Clock;
+
+/***/ },
+/* 226 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(7);
+
+	var CountdownForm = React.createClass({
+		displayName: 'CountdownForm',
+
+		onFormSubmit: function onFormSubmit(e) {
+			e.preventDefault();
+			var seconds = this.refs.seconds.value;
+
+			if (seconds.match(/^[0-9]*$/)) {
+				this.refs.seconds.value = '';
+				this.props.setCountdown(parseInt(seconds, 10));
+			}
+		},
+		render: function render() {
+			return React.createElement(
+				'div',
+				null,
+				React.createElement(
+					'form',
+					{ ref: 'form', onSubmit: this.onFormSubmit, className: 'countdown-form' },
+					React.createElement('input', { type: 'text', ref: 'seconds', placeholder: 'Enter Seconds' }),
+					React.createElement(
+						'button',
+						{ className: 'button hollow expanded' },
+						' Start Countdown '
+					)
+				)
+			);
+		}
+	});
+
+	module.exports = CountdownForm;
+
+/***/ },
+/* 227 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(7);
+
+	var Controls = React.createClass({
+		displayName: 'Controls',
+
+		propTypes: {
+			countdownStatus: React.PropTypes.string,
+			onStatusChange: React.PropTypes.func
+		},
+		onStatusChange: function onStatusChange(newStatus) {
+			var _this = this;
+
+			return function () {
+				_this.props.onStatusChange(newStatus);
+			};
+		},
+		render: function render() {
+			var _this2 = this;
+
+			var countdownStatus = this.props.countdownStatus;
+
+
+			var RenderStartStopButton = function RenderStartStopButton() {
+				if (countdownStatus === 'started') {
+					return React.createElement(
+						'button',
+						{ onClick: _this2.onStatusChange('paused'), className: 'button primary' },
+						'Paused'
+					);
+				} else if (countdownStatus === 'paused') {
+					return React.createElement(
+						'button',
+						{ onClick: _this2.onStatusChange('started'), className: 'button secondary' },
+						'Start'
+					);
+				}
+			};
+			return React.createElement(
+				'div',
+				{ className: 'controls' },
+				RenderStartStopButton(),
+				React.createElement(
+					'button',
+					{ onClick: this.onStatusChange('stopped'), className: 'button alert hollow' },
+					' Clear '
+				)
+			);
+		}
+	});
+
+	module.exports = Controls;
+
+/***/ },
+/* 228 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(7);
+
+	var Clock = __webpack_require__(225);
+	var CountdownForm = __webpack_require__(226);
+	var Controls = __webpack_require__(227);
 
 	var Countdown = React.createClass({
 		displayName: 'Countdown',
@@ -25128,169 +25348,6 @@
 	});
 
 	module.exports = Countdown;
-
-/***/ },
-/* 226 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var React = __webpack_require__(7);
-
-	var Clock = React.createClass({
-		displayName: 'Clock',
-
-		getDefaultProps: function getDefaultProps() {
-			return {
-				totalSeconds: 0
-			};
-		},
-		propTypes: {
-			totalSeconds: React.PropTypes.number
-		},
-		formatSeconds: function formatSeconds(totalSeconds) {
-			var seconds = totalSeconds % 60;
-			var minutes = Math.floor(totalSeconds / 60);
-
-			if (seconds < 10) {
-				seconds = '0' + seconds;
-			}
-
-			if (minutes < 10) {
-				minutes = '0' + minutes;
-			}
-
-			return minutes + ':' + seconds;
-		},
-		render: function render() {
-			var totalSeconds = this.props.totalSeconds;
-
-
-			return React.createElement(
-				'div',
-				{ className: 'clock' },
-				React.createElement(
-					'span',
-					{ className: 'clock-text' },
-					this.formatSeconds(totalSeconds)
-				)
-			);
-		}
-	});
-
-	module.exports = Clock;
-
-/***/ },
-/* 227 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var React = __webpack_require__(7);
-
-	var CountdownForm = React.createClass({
-		displayName: 'CountdownForm',
-
-		onFormSubmit: function onFormSubmit(e) {
-			e.preventDefault();
-			var seconds = this.refs.seconds.value;
-
-			if (seconds.match(/^[0-9]*$/)) {
-				this.refs.seconds.value = '';
-				this.props.setCountdown(parseInt(seconds, 10));
-			}
-		},
-		render: function render() {
-			return React.createElement(
-				'div',
-				null,
-				React.createElement(
-					'form',
-					{ ref: 'form', onSubmit: this.onFormSubmit, className: 'countdown-form' },
-					React.createElement('input', { type: 'text', ref: 'seconds', placeholder: 'Enter Seconds' }),
-					React.createElement(
-						'button',
-						{ className: 'button hollow expanded' },
-						' Start Countdown '
-					)
-				)
-			);
-		}
-	});
-
-	module.exports = CountdownForm;
-
-/***/ },
-/* 228 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var React = __webpack_require__(7);
-
-	var Controls = React.createClass({
-		displayName: 'Controls',
-
-		propTypes: {
-			countdownStatus: React.PropTypes.string,
-			onStatusChange: React.PropTypes.func.isRequired
-		},
-		onStatusChange: function onStatusChange(newStatus) {
-			var _this = this;
-
-			return function () {
-				_this.props.onStatusChange(newStatus);
-			};
-		},
-		componentWillReceiveProps: function componentWillReceiveProps(newProps) {
-			console.log('componentWillRecieveProps', newProps.countdownStatus);
-		},
-		render: function render() {
-			var _this2 = this;
-
-			var countdownStatus = this.props.countdownStatus;
-
-
-			var renderStartStopButton = function renderStartStopButton() {
-				if (countdownStatus === 'started') {
-					return React.createElement(
-						'button',
-						{ onClick: _this2.onStatusChange('paused'), className: 'button secondary' },
-						'Paused'
-					);
-				} else if (countdownStatus === 'paused') {
-					return React.createElement(
-						'button',
-						{ onClick: _this2.onStatusChange('started'), className: 'button primary' },
-						'Start'
-					);
-				}
-			};
-
-			/* Why U no work if you the same thing?
-	  function renderStartStopButton() {
-	  	if(countdownStatus === 'started') {
-	  		return <button onClick={this.onStatusChange('paused')} className='button secondary'>Paused</button>
-	  	} else if(countdownStatus === 'paused') {
-	  		return <button onClick={this.onStatusChange('start')} className='button primary'>Start</button>
-	  	}
-	  };
-	  */
-
-			return React.createElement(
-				'div',
-				{ className: 'controls' },
-				renderStartStopButton(),
-				React.createElement(
-					'button',
-					{ className: 'button hollow alert', onClick: this.onStatusChange('stopped') },
-					' Clear '
-				)
-			);
-		}
-	});
-
-	module.exports = Controls;
 
 /***/ },
 /* 229 */

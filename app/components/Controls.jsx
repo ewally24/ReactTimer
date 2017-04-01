@@ -3,44 +3,29 @@ var React = require('react');
 var Controls = React.createClass({
 	propTypes: {
 		countdownStatus: React.PropTypes.string,
-		onStatusChange: React.PropTypes.func.isRequired
+		onStatusChange: React.PropTypes.func
 	},
 	onStatusChange: function(newStatus) {
 		return () => {
 			this.props.onStatusChange(newStatus);
 		}
 	},
-	componentWillReceiveProps: function(newProps) {
-		console.log('componentWillRecieveProps', newProps.countdownStatus);
-	},
 	render: function() {
 		var {countdownStatus} = this.props;
 
-		
-		var renderStartStopButton = () => {
+		var RenderStartStopButton = () => {
 			if(countdownStatus === 'started') {
-				return <button onClick={this.onStatusChange('paused')} className='button secondary'>Paused</button>
+				return <button onClick={this.onStatusChange('paused')} className='button primary'>Paused</button>
 			} else if(countdownStatus === 'paused') {
-				return <button onClick={this.onStatusChange('started')} className='button primary'>Start</button>
+				return <button onClick={this.onStatusChange('started')} className='button secondary'>Start</button> 
 			}
-		};
-		
-		/* Why U no work if you the same thing?
-		function renderStartStopButton() {
-			if(countdownStatus === 'started') {
-				return <button onClick={this.onStatusChange('paused')} className='button secondary'>Paused</button>
-			} else if(countdownStatus === 'paused') {
-				return <button onClick={this.onStatusChange('start')} className='button primary'>Start</button>
-			}
-		};
-		*/
-
+		}
 		return (
 			<div className='controls'>
-				{renderStartStopButton()}
-				<button className='button hollow alert' onClick={this.onStatusChange('stopped')}> Clear </button>
+				{RenderStartStopButton()}
+				<button onClick={this.onStatusChange('stopped')} className='button alert hollow'> Clear </button>
 			</div>
-		)	
+		)
 	}
 })
 
